@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  * Updates to the above are reflected here through a refresh process.
  */
 
-namespace Google\Cloud\Translate\V3\Gapic;
+namespace Google\Cloud\Translate\V3\Client\BaseClient;
 
 use Google\ApiCore\ApiException;
 use Google\ApiCore\CredentialsWrapper;
@@ -45,10 +45,8 @@ use Google\LongRunning\Operation;
  * This class provides the ability to make remote calls to the backing service through method
  * calls that map to API methods. Sample code to get started:
  *
- * @deprecated Please note this class is considered deprecated and will be removed
- *             in our next major version.
  */
-class TranslationServiceGapicClient
+class TranslationServiceBaseClient
 {
     use GapicClientTrait;
 
@@ -93,15 +91,15 @@ class TranslationServiceGapicClient
         return [
             'serviceName' => self::SERVICE_NAME,
             'apiEndpoint' => self::SERVICE_ADDRESS . ':' . self::DEFAULT_SERVICE_PORT,
-            'clientConfig' => __DIR__ . '/../resources/translation_service_client_config.json',
-            'descriptorsConfigPath' => __DIR__ . '/../resources/translation_service_descriptor_config.php',
-            'gcpApiConfigPath' => __DIR__ . '/../resources/translation_service_grpc_config.json',
+            'clientConfig' => __DIR__ . '/../../resources/translation_service_client_config.json',
+            'descriptorsConfigPath' => __DIR__ . '/../../resources/translation_service_descriptor_config.php',
+            'gcpApiConfigPath' => __DIR__ . '/../../resources/translation_service_grpc_config.json',
             'credentialsConfig' => [
                 'defaultScopes' => self::$serviceScopes,
             ],
             'transportConfig' => [
                 'rest' => [
-                    'restClientConfigPath' => __DIR__ . '/../resources/translation_service_rest_client_config.php',
+                    'restClientConfigPath' => __DIR__ . '/../../resources/translation_service_rest_client_config.php',
                 ],
             ],
         ];
@@ -283,6 +281,74 @@ class TranslationServiceGapicClient
     /**
      * Returns a list of supported languages for translation.
      *
+     * @param string $parent       Required. Project or location to make a call. Must refer to a caller's
+     *                             project.
+     *
+     *                             Format: `projects/{project-number-or-id}` or
+     *                             `projects/{project-number-or-id}/locations/{location-id}`.
+     *
+     *                             For global calls, use `projects/{project-number-or-id}/locations/global` or
+     *                             `projects/{project-number-or-id}`.
+     *
+     *                             Non-global location is required for AutoML models.
+     *
+     *                             Only models within the same region (have same location-id) can be used,
+     *                             otherwise an INVALID_ARGUMENT (400) error is returned.
+     * @param array  $optionalArgs {
+     *     Optional.
+     *
+     *     @type string $displayLanguageCode
+     *           Optional. The language to use to return localized, human readable names
+     *           of supported languages. If missing, then display names are not returned
+     *           in a response.
+     *     @type string $model
+     *           Optional. Get supported languages of this model.
+     *
+     *           The format depends on model type:
+     *
+     *           - AutoML Translation models:
+     *           `projects/{project-number-or-id}/locations/{location-id}/models/{model-id}`
+     *
+     *           - General (built-in) models:
+     *           `projects/{project-number-or-id}/locations/{location-id}/models/general/nmt`,
+     *
+     *
+     *           Returns languages supported by the specified model.
+     *           If missing, we get supported languages of Google general NMT model.
+     *     @type RetrySettings|array $retrySettings
+     *           Retry settings to use for this call. Can be a {@see RetrySettings} object, or an
+     *           associative array of retry settings parameters. See the documentation on
+     *           {@see RetrySettings} for example usage.
+     * }
+     * @return \Google\Cloud\Translate\V3\SupportedLanguages
+     * @deprecated Please note this method will be removed in our next major version increment.
+     * @throws ApiException if the remote call fails
+     */
+    public function getSupportedLanguages($parent, array $optionalArgs = [])
+    {
+        $request = new GetSupportedLanguagesRequest();
+        $requestParamHeaders = [];
+        $request->setParent($parent);
+        $requestParamHeaders['parent'] = $parent;
+        if (isset($optionalArgs['displayLanguageCode'])) {
+            $request->setDisplayLanguageCode($optionalArgs['displayLanguageCode']);
+        }
+
+        if (isset($optionalArgs['model'])) {
+            $request->setModel($optionalArgs['model']);
+        }
+
+        return $this->startCall(
+            'GetSupportedLanguages',
+            SupportedLanguages::class,
+            $optionalArgs,
+            $request
+        )->wait();
+    }
+
+    /**
+     * Returns a list of supported languages for translation.
+     *
      * @param GetSupportedLanguagesRequest $request The request message.
      * @param array  $optionalArgs {
      *     Optional.
@@ -295,7 +361,7 @@ class TranslationServiceGapicClient
      * @return SupportedLanguages
      * @throws ApiException if the remote call fails
      */
-    public function getSupportedLanguages(
+    public function sendGetSupportedLanguages(
         GetSupportedLanguagesRequest $request,
         array $optionalArgs = []
     ) : SupportedLanguages {
