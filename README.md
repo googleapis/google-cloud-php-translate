@@ -33,10 +33,12 @@ on authenticating your client. Once authenticated, you'll be ready to start maki
 ### Sample
 
 ```php
-Google\ApiCore\ApiException;
-Google\Cloud\Translate\V3\AdaptiveMtDataset;
-Google\Cloud\Translate\V3\Client\TranslationServiceClient;
-Google\Cloud\Translate\V3\GetAdaptiveMtDatasetRequest;
+require 'vendor/autoload.php';
+
+use Google\ApiCore\ApiException;
+use Google\Cloud\Translate\V3\AdaptiveMtDataset;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
+use Google\Cloud\Translate\V3\GetAdaptiveMtDatasetRequest;
 
 // Create a client.
 $translationServiceClient = new TranslationServiceClient();
@@ -59,7 +61,7 @@ try {
 ```php
 require 'vendor/autoload.php';
 
-use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 
 $translationClient = new TranslationServiceClient();
 $content = ['one', 'two', 'three'];
@@ -87,7 +89,7 @@ utilizing gRPC for its transport (by installing the gRPC extension) while the ha
 REST & HTTP/1.1 only.
 
 The handwritten client can be found under `Google\Cloud\Translate\TranslateClient`, whereas the generated client is
-found under `Google\Cloud\Translate\V3\TranslationServiceClient`.
+found under `Google\Cloud\Translate\V3\Client\TranslationServiceClient`.
 
 ### Debugging
 
